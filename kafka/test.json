@@ -1,0 +1,22 @@
+{
+  "sort": [
+    1136.2981395685765
+  ],
+  "_type": "taxi",
+  "_source": {
+    "is_occupied": "0",
+    "doc": {
+      "location": {
+        "lat": "37.78878",
+        "lon": "-122.40104"
+      }
+    },
+    "location": {
+      "lat": "37.79608",
+      "lon": "-122.26864"
+    }
+  },
+  "_score": null,
+  "_index": "taxi_index",
+  "_id": "odlorhem"
+}

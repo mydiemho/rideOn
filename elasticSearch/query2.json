@@ -1,0 +1,21 @@
+{
+  "sort": [
+    {
+      "_geo_distance": {
+        "location": {
+          "lat": 44.29044293551898,
+          "lon": -122.12824566213038
+        }
+      },
+      "unit": "km",
+      "order": "asc"
+    }
+  ],
+  "query": {
+    "match": {
+      "is_occupied": "0"
+    }
+  },
+  "from": 0,
+  "size": 15
+}

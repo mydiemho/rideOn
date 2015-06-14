@@ -1,0 +1,5 @@
+{
+  "elastic_search": "http://localhost:9200",
+  "kafka": "localhost:9092",
+  "index": "taxi_index"
+}
