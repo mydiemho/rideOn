@@ -1,6 +1,10 @@
+import logging
+
 __author__ = 'myho'
 
 from pyleus.storm import SimpleBolt
+
+log = logging.getLogger("logging_example.request_bolt")
 
 class RequestBolt(SimpleBolt):
 
@@ -8,7 +12,7 @@ class RequestBolt(SimpleBolt):
 
     def process_tuple(self, tup):
         request = tup.values
-        print request
+        log.info(request)
 
 if __name__ == '__main__':
     RequestBolt().run()
