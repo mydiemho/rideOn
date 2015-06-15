@@ -34,8 +34,8 @@ topology:
             # Defaults to the earliest offset time in the stream.
             start_offset_time: 1398971060
 
-# the initial processing step from the Kafka spout
-- bolt:
+  # the initial processing step from the Kafka spout
+  - bolt:
         name: request_bolt
         module: request_topology.requestBolt
         parallelism_hint: 3
