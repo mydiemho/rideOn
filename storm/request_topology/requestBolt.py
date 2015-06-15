@@ -11,4 +11,4 @@ class RequestBolt(SimpleBolt):
         print request
 
 if __name__ == '__main__':
-    RequestBolt.run()
+    RequestBolt().run()
