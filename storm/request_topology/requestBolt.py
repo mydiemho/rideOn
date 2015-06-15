@@ -8,7 +8,7 @@ from pyleus.storm import SimpleBolt
 
 INDEX_NAME = 'taxi_index'
 
-log = logging.getLogger("logging_example.request_bolt")
+log = logging.getLogger("request_topology.request_bolt")
 es = pyelasticsearch.ElasticSearch()
 client = KafkaClient("localhost:9092")
 producer = SimpleProducer(client)
@@ -49,13 +49,13 @@ class RequestBolt(SimpleBolt):
 
         # find closest one, send response back to user, let user pick or not
 
-        print "executing search query"
+        log.info("executing search query")
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
         index = random.randint(0, 14)
         # print "index ", index
         taxi_id = hits[index]['_id']
-        print "sending occupancy_update event for taxi %s\n" % taxi_id
+        log.info("sending occupancy_update event for taxi %s\n", taxi_id)
         # print json.dumps(hits[index])
 
         # send to kafka
