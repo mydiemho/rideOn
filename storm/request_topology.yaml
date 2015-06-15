@@ -1,7 +1,9 @@
 # This is a non-operational example demonstrating the use of a Kafka spout.
 #
 name: request_topology
-#
+
+workers: 4
+
 topology:
 
 - spout:
@@ -10,7 +12,7 @@ topology:
         options:
             # The Kafka topic to stream from.
             # Required.
-            topic: "user-request"
+            topic: "user_request"
 
             # ZooKeeper connection string. Comma-separated list of ZooKeeper
             # servers.
