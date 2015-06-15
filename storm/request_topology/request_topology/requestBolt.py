@@ -2,7 +2,7 @@ __author__ = 'myho'
 
 from pyleus.storm import SimpleBolt
 
-class RequestBold(SimpleBolt):
+class RequestBolt(SimpleBolt):
 
     OUTPUT_FIELDS = ['request']
 
@@ -11,4 +11,4 @@ class RequestBold(SimpleBolt):
         print request
 
 if __name__ == '__main__':
-    RequestBold.run()
+    RequestBolt.run()
