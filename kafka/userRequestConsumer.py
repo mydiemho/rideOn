@@ -7,6 +7,7 @@ from pyelasticsearch import ElasticSearch
 
 # To consume messages
 
+RESULT_SIZE = 10
 GROUP_NAME = 'user_request'
 INDEX_NAME = 'taxi_index'
 
@@ -36,7 +37,7 @@ for message in consumer:
 
     query = {
         "from": 0,
-        "size": 1,
+        "size": RESULT_SIZE,
         "query": {
             "match": {
                 "is_occupied": "0"
@@ -58,7 +59,7 @@ for message in consumer:
     print "executing search query"
     res = es.search(query, index=INDEX_NAME)
     hits = res['hits']['hits']
-    index = random.randint(0, 14)
+    index = random.randint(0, RESULT_SIZE)
     # print "index ", index
     taxi_id = hits[index]['_id']
     print "sending occupancy_update event for taxi %s\n" % taxi_id
