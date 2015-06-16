@@ -61,7 +61,7 @@ class SimpleRequestBolt(SimpleBolt):
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
-        index = random.randint(0, QUERY_SIZE)
+        index = random.randint(0, QUERY_SIZE-1)
         # print "index ", index
         taxi_id = hits[index]['_id']
         log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)

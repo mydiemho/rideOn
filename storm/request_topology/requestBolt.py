@@ -20,8 +20,8 @@ KAFKA_CLUSTER = "52.8.145.247:9092,52.8.148.251:9092,52.8.158.130:9092,52.8.162.
 log = logging.getLogger("request_topology.request_bolt")
 
 es = pyelasticsearch.ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
-client = KafkaClient(KAFKA_CLUSTER)
-producer = SimpleProducer(client)
+kafka_client = KafkaClient(hosts=KAFKA_CLUSTER)
+producer = SimpleProducer(kafka_client)
 
 class RequestBolt(SimpleBolt):
     OUTPUT_FIELDS = ['request']
@@ -63,7 +63,7 @@ class RequestBolt(SimpleBolt):
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
-        index = random.randint(0, QUERY_SIZE)
+        index = random.randint(0, QUERY_SIZE-1)
         # print "index ", index
         taxi_id = hits[index]['_id']
         log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
