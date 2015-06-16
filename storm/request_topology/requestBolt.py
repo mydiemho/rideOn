@@ -23,6 +23,7 @@ es = pyelasticsearch.ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
 kafka_client = KafkaClient(hosts=KAFKA_CLUSTER)
 producer = SimpleProducer(kafka_client)
 
+
 class RequestBolt(SimpleBolt):
     OUTPUT_FIELDS = ['request']
 
@@ -63,21 +64,32 @@ class RequestBolt(SimpleBolt):
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
-        index = random.randint(0, QUERY_SIZE-1)
+        index = random.randint(0, QUERY_SIZE - 1)
         # print "index ", index
         taxi_id = hits[index]['_id']
-        log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
+        # log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
         # print json.dumps(hits[index])
 
         # send to kafka
         msg = {}
         msg['taxi_id'] = taxi_id
 
+        taxi_doc = {
+            "is_occupied": "1"
+        }
 
+        taxi_type = 'taxi'
+        res = es.update(index=INDEX_NAME,
+                        id=taxi_id,
+                        doc=taxi_doc,
+                        doc_type=taxi_type)
 
-        producer.send_messages(
-            "occupancy_update",
-            json.dumps(msg))
+        log.debug("+++++++++++++++++++updated occupancy for taxi %s++++++++++++++++++++\n", taxi_id)
+        log.debug(res)
+
+        # producer.send_messages(
+        #     "occupancy_update",
+        #     json.dumps(msg))
 
 
 if __name__ == '__main__':
