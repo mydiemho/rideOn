@@ -6,16 +6,10 @@ import pyelasticsearch
 
 from pyleus.storm import SimpleBolt
 
-logging.basicConfig(
-       level=logging.DEBUG,
-       filename='/tmp/pyleus/pyleus_simple_topology.log',
-       format="%(message)s",
-       filemode='a',
-   )
-
 INDEX_NAME = 'taxi_index'
 
-log = logging.getLogger("request_topology.request_bolt")
+log = logging.getLogger("request_topology.simple_request_bolt")
+
 es = pyelasticsearch.ElasticSearch()
 client = KafkaClient("52.8.145.247:9092,52.8.148.251:9092,52.8.158.130:9092,52.8.162.105:9092,52.8.153.92:9092")
 producer = SimpleProducer(client)
@@ -31,4 +25,12 @@ class SimpleRequestBolt(SimpleBolt):
         log.debug(request[0])
 
 if __name__ == '__main__':
+
+    logging.basicConfig(
+        level = logging.DEBUG,
+        filename='/tmp/pyleus/simple_request_bolt.log',
+        format="%(message)s",
+        filemode='a'
+    )
+
     SimpleRequestBolt().run()
