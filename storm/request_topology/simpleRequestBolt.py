@@ -6,6 +6,13 @@ import pyelasticsearch
 
 from pyleus.storm import SimpleBolt
 
+logging.basicConfig(
+       level=logging.DEBUG,
+       filename='/tmp/pyleus_simple_topology.log',
+       format="%(message)s",
+       filemode='a',
+   )
+
 INDEX_NAME = 'taxi_index'
 
 log = logging.getLogger("request_topology.request_bolt")
@@ -21,6 +28,7 @@ class SimpleRequestBolt(SimpleBolt):
         request = tup.values
         log.info("++++++++++++++++++RECEIVING MSG+++++++++++++++")
         log.info(request)
+        log.info(request[0])
 
 if __name__ == '__main__':
     SimpleRequestBolt().run()

@@ -21,7 +21,7 @@ class RequestBolt(SimpleBolt):
         request = tup.values
         log.info(request)
 
-        parsed_msg = json.loads(request)
+        parsed_msg = json.loads(request[0])
 
         location = {
             "lat": parsed_msg['location']['latitude'],
