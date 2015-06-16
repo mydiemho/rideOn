@@ -4,6 +4,14 @@ import random
 from kafka import KafkaClient, SimpleProducer
 import pyelasticsearch
 
+
+logging.basicConfig(
+    level = logging.DEBUG,
+    filename='/tmp/pyleus/simple_request_bolt.log',
+    format="%(message)s",
+    filemode='a'
+)
+
 from pyleus.storm import SimpleBolt
 
 INDEX_NAME = 'taxi_index'
@@ -20,17 +28,10 @@ class SimpleRequestBolt(SimpleBolt):
 
     def process_tuple(self, tup):
         request = tup.values
+        # convert the extract value to a JSON object
+        json_object = json.loads(request[0])
         log.debug("++++++++++++++++++RECEIVING MSG+++++++++++++++")
-        log.debug(request)
-        log.debug(request[0])
+        log.debug(json_object['location'])
 
 if __name__ == '__main__':
-
-    logging.basicConfig(
-        level = logging.DEBUG,
-        filename='/tmp/pyleus/simple_request_bolt.log',
-        format="%(message)s",
-        filemode='a'
-    )
-
     SimpleRequestBolt().run()

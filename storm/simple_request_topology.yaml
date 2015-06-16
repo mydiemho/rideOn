@@ -2,7 +2,7 @@
 #
 name: simple_request_topology
 
-logging_config: logging.conf
+#logging_config: logging.conf
 
 workers: 4
 
