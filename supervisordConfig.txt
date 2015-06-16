@@ -1,0 +1,74 @@
+Guide: https://www.digitalocean.com/community/tutorials/how-to-install-and-manage-supervisor-on-ubuntu-and-debian-vps
+
+FILE PATH:
+
+1) ROOT path: /etc/supervisor/conf.d
+2) Kafka: kafka.conf
+3) Zookeeper: zookeeper.conf
+4) Storm: storm.conf
+
+=======================Install on only nimbus node ============================
+
+[program:storm-nimbus]
+command=/usr/local/storm/bin/storm nimbus
+user=ubuntu
+autostart=true
+autorestart=true
+startsecs=10
+startretries=999
+log_stdout=true
+log_stderr=true
+logfile=/usr/local/storm/logs/nimbus.out
+logfile_maxbytes=20MB
+logfile_backups=10
+
+[program:storm-ui]
+command=/usr/local/storm/bin/storm ui
+user=ubuntu
+autostart=true
+autorestart=true
+startsecs=10
+startretries=999
+log_stdout=true
+log_stderr=true
+logfile=/usr/local/storm/logs/ui.out
+logfile_maxbytes=20MB
+logfile_backups=10
+
+=======================Install on all supervisor nodes============================
+[program:storm-supervisor]
+command=/usr/local/storm/bin/storm supervisor
+user=ubuntu
+autostart=true
+autorestart=true
+startsecs=10
+startretries=999
+log_stdout=true
+log_stderr=true
+logfile=/usr/local/storm/logs/supervisor.out
+logfile_maxbytes=20MB
+logfile_backups=10
+
+=======================Install on all node============================
+[program:kafka]
+command=pidproxy /var/run/kafka.pid /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
+user=ubuntu
+autostart=false
+autorestart=true
+startsecs=10
+startretries=999
+log_stdout=true
+log_stderr=true
+logfile=/usr/local/kafka/logs/supervisord-kafka.out
+logfile_maxbytes=20MB
+logfile_backups=10
+stopasgroup=true
+
+[program:zookeeper]
+command=/usr/local/zookeeper/bin/zkServer.sh start-foreground
+autostart=true
+autorestart=true
+stopsignal=KILL
+user=ubuntu
+stderr_logfile=/usr/local/zookeeper/logs/zk.err.log
+stdout_logfile=/usr/local/zookeeper/logs/zk.out.log
