@@ -1,6 +1,6 @@
 # This is a non-operational example demonstrating the use of a Kafka spout.
 #
-name: request_topology
+name: simple_request_topology
 
 logging_config: logging.conf
 
