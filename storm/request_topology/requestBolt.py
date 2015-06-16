@@ -73,6 +73,8 @@ class RequestBolt(SimpleBolt):
         msg = {}
         msg['taxi_id'] = taxi_id
 
+
+
         producer.send_messages(
             "occupancy_update",
             json.dumps(msg))
