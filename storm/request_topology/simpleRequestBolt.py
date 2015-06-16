@@ -8,7 +8,7 @@ from pyleus.storm import SimpleBolt
 
 logging.basicConfig(
        level=logging.DEBUG,
-       filename='/tmp/pyleus_simple_topology.log',
+       filename='/tmp/pyleus/pyleus_simple_topology.log',
        format="%(message)s",
        filemode='a',
    )
@@ -26,9 +26,9 @@ class SimpleRequestBolt(SimpleBolt):
 
     def process_tuple(self, tup):
         request = tup.values
-        log.info("++++++++++++++++++RECEIVING MSG+++++++++++++++")
-        log.info(request)
-        log.info(request[0])
+        log.debug("++++++++++++++++++RECEIVING MSG+++++++++++++++")
+        log.debug(request)
+        log.debug(request[0])
 
 if __name__ == '__main__':
     SimpleRequestBolt().run()
