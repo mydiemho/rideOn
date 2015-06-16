@@ -67,7 +67,6 @@ class RequestBolt(SimpleBolt):
         index = random.randint(0, QUERY_SIZE - 1)
         # print "index ", index
         taxi_id = hits[index]['_id']
-        # log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
         # print json.dumps(hits[index])
 
         # send to kafka
@@ -78,18 +77,19 @@ class RequestBolt(SimpleBolt):
             "is_occupied": "1"
         }
 
-        taxi_type = 'taxi'
-        res = es.update(index=INDEX_NAME,
-                        id=taxi_id,
-                        doc=taxi_doc,
-                        doc_type=taxi_type)
+        # taxi_type = 'taxi'
+        # res = es.update(index=INDEX_NAME,
+        #                 id=taxi_id,
+        #                 doc=taxi_doc,
+        #                 doc_type=taxi_type)
+        #
+        # log.debug("+++++++++++++++++++updated occupancy for taxi %s++++++++++++++++++++\n", taxi_id)
+        # log.debug(res)
 
-        log.debug("+++++++++++++++++++updated occupancy for taxi %s++++++++++++++++++++\n", taxi_id)
-        log.debug(res)
-
-        # producer.send_messages(
-        #     "occupancy_update",
-        #     json.dumps(msg))
+        log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
+        producer.send_messages(
+            "occupancy_update",
+            json.dumps(msg))
 
 
 if __name__ == '__main__':
