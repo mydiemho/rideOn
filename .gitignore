@@ -2,3 +2,4 @@ trips/
 credentials.txt
 cassandra.txt
 .idea
+.jar
