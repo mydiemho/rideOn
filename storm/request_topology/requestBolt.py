@@ -63,20 +63,20 @@ class RequestBolt(SimpleBolt):
 
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
-        hits = res['hits']['hits']
-        index = random.randint(0, QUERY_SIZE - 1)
-        # print "index ", index
+        hits = res['hits']['total']
+        log.debug("++++++++++++++++hits count: %d+++++++++++++++", hits)
+        index = random.randint(0, hits - 1)
         taxi_id = hits[index]['_id']
-        # print json.dumps(hits[index])
 
         # send to kafka
         msg = {}
         msg['taxi_id'] = taxi_id
+        msg['occupancy_status'] = 1
 
-        taxi_doc = {
-            "is_occupied": "1"
-        }
-
+        # taxi_doc = {
+        #     "is_occupied": "1"
+        # }
+        #
         # taxi_type = 'taxi'
         # res = es.update(index=INDEX_NAME,
         #                 id=taxi_id,
