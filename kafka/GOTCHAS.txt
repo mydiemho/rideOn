@@ -1,0 +1,8 @@
+1) Message send from KeyedProducer are in a different format than that of SimpleProducer
+    a) KeyedProducer append key to the msg
+       [{'abboip': '{"data": {"taxi_id": "abboip", "location": {"latitude": "37.75134", "longitude": "-122.39488"}}}'}]
+
+    b) SimpleProducer send msg as is
+       {u'data': {u'taxi_id': u'ifeshce', u'location': {u'latitude': u'37.75183', u'longitude': u'-122.39496'}}}
+
+2)

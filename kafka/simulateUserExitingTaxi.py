@@ -63,7 +63,7 @@ class UserVacatingTaxiProducer():
                             id=taxi_id,
                             doc=taxi_doc,
                             doc_type=taxi_type)
-            print "+++++++++++++updated occupancy++++++++++"
+            print "+++++++++++++updated occupancy++++++++++\n"
             print res
 
             # msg = {}
@@ -75,8 +75,6 @@ class UserVacatingTaxiProducer():
             #     json.dumps(msg))
             #
             # print "sending occupancy_update event for taxi %s\n" % taxi_id
-
-            time.sleep(5)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:

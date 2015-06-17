@@ -34,11 +34,11 @@ class GeoUpdateBolt(SimpleBolt):
 
         indexname = 'taxi_index'
         taxi_type = 'taxi'
-        taxi_id = parsed_msg['data']['taxi_id']
+        taxi_id = parsed_msg['taxi_id']
         taxi_doc = {
             "location": {
-                "lat": parsed_msg['data']['location']['latitude'],
-                "lon": parsed_msg['data']['location']['longitude']
+                "lat": parsed_msg['location']['latitude'],
+                "lon": parsed_msg['location']['longitude']
             }
         }
 
