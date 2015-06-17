@@ -38,4 +38,3 @@ for message in consumer:
 
     print "updated occupancy for taxi %s" % taxi_id
     print json.dumps(res)
-    print

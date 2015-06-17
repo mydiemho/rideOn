@@ -28,17 +28,17 @@ class Producer():
 
         kafka_client.ensure_topic_exists(self.topic)
 
-        # while True:
-        msg = {}
-        latitude = random.uniform(self.minLat, self.maxLat)
-        longitude = random.uniform(self.minLong, self.maxLong)
-        msg['location'] = {
-            'latitude': latitude,
-            'longitude': longitude
-        }
-        producer.send_messages(self.topic, json.dumps(msg))
-        print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
-        # time.sleep(2)  # Creating some delay
+        while True:
+            msg = {}
+            latitude = random.uniform(self.minLat, self.maxLat)
+            longitude = random.uniform(self.minLong, self.maxLong)
+            msg['location'] = {
+                'latitude': latitude,
+                'longitude': longitude
+            }
+            producer.send_messages(self.topic, json.dumps(msg))
+            print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
+            # time.sleep(2)  # Creating some delay
 
 
 if __name__ == "__main__":

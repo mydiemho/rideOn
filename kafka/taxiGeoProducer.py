@@ -31,23 +31,22 @@ class Producer():
             reader = csv.reader(f)
             taxiLocations = list(reader)
 
-        # while True:
-        msg = {}
-        for loc in taxiLocations:
-            cabId = loc[0]
-            latitude = loc[1]
-            longitude = loc[2]
-            data = {}
-            data['taxi_id'] = cabId
-            location = {
-                'latitude': latitude,
-                'longitude': longitude
-            }
-            data['location'] = location
-            msg['data'] = data
-            kafka_producer.send(key=cabId, topic=self.topic, msg=json.dumps(msg))
-            print "sending location update for taxi %s" % cabId
-            time.sleep(0.1)  # Creating some delay
+        while True:
+            msg = {}
+            for loc in taxiLocations:
+                cabId = loc[0]
+                latitude = loc[1]
+                longitude = loc[2]
+                data = {}
+                data['taxi_id'] = cabId
+                location = {
+                    'latitude': latitude,
+                    'longitude': longitude
+                }
+                data['location'] = location
+                msg['data'] = data
+                kafka_producer.send(key=cabId, topic=self.topic, msg=json.dumps(msg))
+                print "sending location update for taxi %s" % cabId
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
