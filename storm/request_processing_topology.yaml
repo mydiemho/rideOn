@@ -1,6 +1,6 @@
 # This is a non-operational example demonstrating the use of a Kafka spout.
 #
-name: request_topology
+name: request_processing_topology
 
 workers: 4
 
@@ -23,11 +23,11 @@ topology:
 
             # Root path in ZooKeeper to store consumer offsets.
             # Defaults to: /pyleus-kafka-offsets/<topology name>
-            zk_root: /pyleus-kafka-offsets/request_topology
+            zk_root: /pyleus-kafka-offsets/request_processing_topology
 
             # Kafka consumer ID.
 #           # Defaults to: pyleus-<topology name>
-            consumer_id: pyleus-request_topology
+            consumer_id: pyleus-request_processing_topology
 
             # Whether the initial offset should be that specified by
 #           # start_offset_time (true) or the head of the stream (false).
@@ -39,9 +39,9 @@ topology:
             start_offset_time: 2147483648
 
 - bolt:
-        name: request_bolt
+        name: request_processing_bolt
         parallelism_hint: 3
-        module: request_topology.requestBolt
+        module: request_processing_topology.requestProcessingBolt
         tick_freq_secs: 5.0
         groupings:
             - shuffle_grouping: kafka-spout

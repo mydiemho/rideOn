@@ -17,14 +17,14 @@ ELASTIC_SEARCH_CLUSTER = [
 
 KAFKA_CLUSTER = "52.8.145.247:9092,52.8.148.251:9092,52.8.158.130:9092,52.8.162.105:9092,52.8.153.92:9092"
 
-log = logging.getLogger("request_topology.request_bolt")
+log = logging.getLogger("request_processing_topology.request_bolt")
 
 es = pyelasticsearch.ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
 kafka_client = KafkaClient(hosts=KAFKA_CLUSTER)
 producer = SimpleProducer(kafka_client)
 
 
-class RequestBolt(SimpleBolt):
+class RequestProcessingBolt(SimpleBolt):
     OUTPUT_FIELDS = ['request']
 
     def process_tuple(self, tup):
@@ -65,7 +65,7 @@ class RequestBolt(SimpleBolt):
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
 
-        log.debug("++++++++++++++++hits count: %d+++++++++++++++", len(hits))
+        log.debug("++++++++++++++++hits count: %d+++++++++++++++\n", len(hits))
         # error handle, no cab available
         if len(hits) == 0:
             return
@@ -105,4 +105,4 @@ if __name__ == '__main__':
         filemode='a'
     )
 
-    RequestBolt().run()
+    RequestProcessingBolt().run()
