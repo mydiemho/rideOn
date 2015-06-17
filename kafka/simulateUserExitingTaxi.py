@@ -52,7 +52,7 @@ class UserVacatingTaxiProducer():
             if len(hits) == 0:
                 return
 
-            taxi_id = hits["_id"]
+            taxi_id = hits[0]['_id']
             print ("++++++++++++++++++vacating taxi %s++++++++", taxi_id)
             taxi_doc = {
                 "is_occupied": "0"

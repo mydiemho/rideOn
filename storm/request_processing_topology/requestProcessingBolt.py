@@ -64,13 +64,14 @@ class RequestProcessingBolt(SimpleBolt):
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
         hits = res['hits']['hits']
+        hits_count = len(hits)
 
-        log.debug("++++++++++++++++hits count: %d+++++++++++++++\n", len(hits))
+        log.debug("++++++++++++++++hits count: %d+++++++++++++++\n", hits_count)
         # error handle, no cab available
-        if len(hits) == 0:
+        if hits_count == 0:
             return
 
-        index = random.randint(0, hits - 1)
+        index = random.randint(0, hits_count - 1)
         taxi_id = hits[index]['_id']
 
         # send to kafka
