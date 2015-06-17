@@ -63,8 +63,13 @@ class RequestBolt(SimpleBolt):
 
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
-        hits = res['hits']['total']
-        log.debug("++++++++++++++++hits count: %d+++++++++++++++", hits)
+        hits = res['hits']['hits']
+
+        log.debug("++++++++++++++++hits count: %d+++++++++++++++", len(hits))
+        # error handle, no cab available
+        if len(hits) == 0:
+            return
+
         index = random.randint(0, hits - 1)
         taxi_id = hits[index]['_id']
 
