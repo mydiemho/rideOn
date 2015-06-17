@@ -19,13 +19,13 @@ class Producer():
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        kafka = config['kafka']
+        kafka_cluster = config['kafka_cluster']
         source_file = self.source_file
 
-        client = KafkaClient(kafka)
-        producer = KeyedProducer(client)
+        kafka_client = KafkaClient(kafka_cluster)
+        kafka_producer = KeyedProducer(kafka_client)
 
-        client.ensure_topic_exists(self.topic)
+        kafka_client.ensure_topic_exists(self.topic)
 
         with open(source_file) as f:
             reader = csv.reader(f)
@@ -45,7 +45,7 @@ class Producer():
             }
             data['location'] = location
             msg['data'] = data
-            producer.send(key=cabId, topic=self.topic, msg=json.dumps(msg))
+            kafka_producer.send(key=cabId, topic=self.topic, msg=json.dumps(msg))
             print "sending location update for taxi %s" % cabId
             time.sleep(0.1)  # Creating some delay
 

@@ -22,11 +22,11 @@ class Producer():
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        kafka = config['kafka']
-        client = KafkaClient(kafka)
-        producer = SimpleProducer(client)
+        kafka_cluster = config['kafka_cluster']
+        kafka_client = KafkaClient(kafka_cluster)
+        producer = SimpleProducer(kafka_client)
 
-        client.ensure_topic_exists(self.topic)
+        kafka_client.ensure_topic_exists(self.topic)
 
         # while True:
         msg = {}

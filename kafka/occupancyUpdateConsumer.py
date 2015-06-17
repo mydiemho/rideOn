@@ -26,8 +26,9 @@ for message in consumer:
     indexname = 'taxi_index'
     taxi_type = 'taxi'
     taxi_id = parsed_msg['taxi_id']
+    occupancy_status = parsed_msg['occupancy_status']
     taxi_doc = {
-        "is_occupied": "1"
+        "is_occupied": occupancy_status
     }
 
     res = es.update(index=indexname,

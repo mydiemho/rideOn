@@ -68,6 +68,7 @@ for message in consumer:
     # send to kafka
     msg = {}
     msg['taxi_id'] = taxi_id
+    msg['occupancy_status'] = 1
 
     producer.send_messages(
         "occupancy_update",

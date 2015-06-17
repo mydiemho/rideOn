@@ -17,7 +17,7 @@ class Producer():
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        kafka_host = config['kafka']
+        kafka_host = config['kafka_cluster']
         client = KafkaClient(kafka_host)
         self.producer = KeyedProducer(client)
 
