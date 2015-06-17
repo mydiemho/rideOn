@@ -79,23 +79,30 @@ class RequestProcessingBolt(SimpleBolt):
         msg['taxi_id'] = taxi_id
         msg['occupancy_status'] = 1
 
-        # taxi_doc = {
-        #     "is_occupied": "1"
-        # }
-        #
-        # taxi_type = 'taxi'
-        # res = es.update(index=INDEX_NAME,
-        #                 id=taxi_id,
-        #                 doc=taxi_doc,
-        #                 doc_type=taxi_type)
-        #
-        # log.debug("+++++++++++++++++++updated occupancy for taxi %s++++++++++++++++++++\n", taxi_id)
-        # log.debug(res)
+        taxi_doc = {
+            "is_occupied": "1"
+        }
 
-        log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
-        producer.send_messages(
-            "occupancy_update",
-            json.dumps(msg))
+        taxi_type = 'taxi'
+
+        try:
+            res = es.update(index=INDEX_NAME,
+                            id=taxi_id,
+                            doc=taxi_doc,
+                            doc_type=taxi_type,
+                            retry_on_conflict=2)
+
+            log.debug("+++++++++++++++++++updated occupancy for taxi %s++++++++++++++++++++\n", taxi_id)
+            log.debug(res)
+        except Exception as e:
+            log.error("++++++++++FAILED TO UPDATE OCCUPANCY+++++++++")
+            log.error("%s\n", str(e))
+
+        #
+        # log.debug("+++++++++++++++++++sending occupancy_update event for taxi %s++++++++++++++++++++\n", taxi_id)
+        # producer.send_messages(
+        #     "occupancy_update",
+        #     json.dumps(msg))
 
 
 if __name__ == '__main__':

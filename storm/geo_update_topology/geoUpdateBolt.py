@@ -42,13 +42,19 @@ class GeoUpdateBolt(SimpleBolt):
             }
         }
 
-        res = es.update(index=indexname,
-                        id=taxi_id,
-                        doc=taxi_doc,
-                        doc_type=taxi_type)
+        try:
+            res = es.update(index=indexname,
+                            id=taxi_id,
+                            doc=taxi_doc,
+                            doc_type=taxi_type,
+                            retry_on_conflict=2)
 
-        log.debug("+++++++++++++++++++updated location for taxi %s++++++++++++++++++++", taxi_id)
-        log.debug("%s\n", res)
+            log.debug("+++++++++++++++++++updated location for taxi %s++++++++++++++++++++", taxi_id)
+            log.debug("%s\n", res)
+        except Exception as e:
+            log.error("++++++++++FAILED TO UPDATE GEO+++++++++")
+            log.error("%s\n", str(e))
+
 
 
 if __name__ == '__main__':

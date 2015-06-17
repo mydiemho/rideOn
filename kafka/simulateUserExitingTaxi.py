@@ -59,12 +59,17 @@ class UserVacatingTaxiProducer():
             }
 
             taxi_type = 'taxi'
-            res = es_client.update(index=config['index'],
-                            id=taxi_id,
-                            doc=taxi_doc,
-                            doc_type=taxi_type)
-            print "+++++++++++++updated occupancy++++++++++\n"
-            print res
+
+            try:
+                res = es_client.update(index=config['index'],
+                                id=taxi_id,
+                                doc=taxi_doc,
+                                doc_type=taxi_type)
+                print "+++++++++++++updated occupancy++++++++++\n"
+                print res
+            except Exception as e:
+                print("++++++++++FAILED TO UPDATE GEO+++++++++")
+                print("%s\n", str(e))
 
             # msg = {}
             # msg['taxi_id'] = taxi_id

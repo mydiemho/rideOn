@@ -1,4 +1,4 @@
-1) Message send from KeyedProducer are in a different format than that of SimpleProducer
+1) Message send from KeyedProducer are in a different format than that of SimpleProducer when consumed by a storm bolt
     a) KeyedProducer append key to the msg
        [{'abboip': '{"data": {"taxi_id": "abboip", "location": {"latitude": "37.75134", "longitude": "-122.39488"}}}'}]
 
