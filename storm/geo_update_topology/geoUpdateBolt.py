@@ -14,7 +14,7 @@ ELASTIC_SEARCH_CLUSTER = [
 
 KAFKA_CLUSTER = "52.8.145.247:9092,52.8.148.251:9092,52.8.158.130:9092,52.8.162.105:9092,52.8.153.92:9092"
 
-log = logging.getLogger("request_processing_topology.request_bolt")
+log = logging.getLogger("geo_update_topology.geo_update_bolt")
 
 es = pyelasticsearch.ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
 kafka_client = KafkaClient(hosts=KAFKA_CLUSTER)
@@ -22,7 +22,7 @@ producer = SimpleProducer(kafka_client)
 
 
 class GeoUpdateBolt(SimpleBolt):
-    OUTPUT_FIELDS = ['request']
+    OUTPUT_FIELDS = ['geo_update']
 
     def process_tuple(self, tup):
         request = tup.values
@@ -54,7 +54,7 @@ class GeoUpdateBolt(SimpleBolt):
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.DEBUG,
-        filename='/tmp/pyleus/request_bolt.log',
+        filename='/tmp/pyleus/geo_update_bolt.log',
         format="%(message)s",
         filemode='a'
     )
