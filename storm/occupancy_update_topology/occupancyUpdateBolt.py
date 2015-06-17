@@ -67,7 +67,7 @@ class OccupancyUpdateBolt(SimpleBolt):
         taxi_type = 'taxi'
 
         try:
-            res = es_client.update(index=config['index'],
+            res = es_client.update(index="taxi_index",
                             id=taxi_id,
                             doc=taxi_doc,
                             doc_type=taxi_type)
