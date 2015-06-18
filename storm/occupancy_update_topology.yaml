@@ -7,7 +7,7 @@ workers: 4
 topology:
 
 - spout:
-        name: kafka-spout
+        name: kafka-occupancy-spout
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -44,4 +44,4 @@ topology:
         module: occupancy_update_topology.occupancyUpdateBolt
         tick_freq_secs: 5.0
         groupings:
-            - shuffle_grouping: kafka-spout
+            - shuffle_grouping: kafka-occupancy-spout
