@@ -22,7 +22,7 @@ producer = SimpleProducer(kafka_client)
 
 
 class GeoUpdateBolt(SimpleBolt):
-    OUTPUT_FIELDS = ['geo_update']
+    OUTPUT_FIELDS = ['location_update']
 
     def process_tuple(self, tup):
         request = tup.values

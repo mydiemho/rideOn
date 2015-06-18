@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # logger.addHandler(fh)
     producer = Producer(
         config_file='config.json',
-        topic='geo_update',
+        topic='location_update',
         source_file=sys.argv[1]
     )
 

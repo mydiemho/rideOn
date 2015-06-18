@@ -12,7 +12,7 @@ topology:
         options:
             # The Kafka topic to stream from.
             # Required.
-            topic: "geo_update"
+            topic: "location_update"
 
             # ZooKeeper connection string. Comma-separated list of ZooKeeper
             # servers.
