@@ -1,10 +1,10 @@
 import json
 import logging
-import random
 
 from kafka import KafkaClient, SimpleProducer
 import pyelasticsearch
 from pyleus.storm import SimpleBolt
+
 
 # GOTCHA:
 # have to include "http://" and ends with "/", else will throw error
@@ -54,7 +54,6 @@ class GeoUpdateBolt(SimpleBolt):
         except Exception as e:
             log.error("++++++++++FAILED TO UPDATE GEO+++++++++")
             log.error("%s\n", str(e))
-
 
 
 if __name__ == '__main__':
