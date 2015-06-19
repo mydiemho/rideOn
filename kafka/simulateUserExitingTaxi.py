@@ -2,15 +2,15 @@
 
 # Kafka producer that sends events in a loop in order to simulate user vacating taxi
 import json
+import random
 import sys
-
-from pyelasticsearch import ElasticSearch
-
-from kafka import KafkaClient, SimpleProducer
 import time
 
+from pyelasticsearch import ElasticSearch
+from kafka import KafkaClient, SimpleProducer
 
-class UserVacatingTaxiProducer():
+
+class TaxiVacateSimulator():
     def __init__(self, topic, config_file):
         self.topic = topic
         self.config_file = config_file
@@ -25,14 +25,19 @@ class UserVacatingTaxiProducer():
         es_client = ElasticSearch(config['es_cluster'])
 
         while True:
+
+            # randomize # of taxis to update
+            querySize = random.sample({3, 5, 7}, 1)[0]
+            print "++++query size: %d" % querySize
+
             # construct query to randomly select an occupied taxi
             query = {
                 "from": 0,
-                "size": 1,
+                "size": querySize,
                 "query": {
                     "function_score": {
                         "filter": {
-                            "term": {"is_occupied": "1"}
+                            "term": {"is_occupied": 1}
                         },
                         "functions": [
                             {
@@ -50,36 +55,41 @@ class UserVacatingTaxiProducer():
 
             # no occupied taxi
             if len(hits) == 0:
+                print "++++NO OCCUPIED TAXI FOUND++++++++"
                 return
 
-            taxi_id = hits[0]['_id']
-            print ("++++++++++++++++++vacating taxi %s++++++++", taxi_id)
-            taxi_doc = {
-                "is_occupied": "0"
-            }
+            print "+++++++FOUND %f taxis" % len(hits)
+            print json.dumps(hits)
+
+            taxi_data = []
+            for ob in hits:
+                taxi_id = ob['_id']
+
+                dict = {
+                    'taxi_id': taxi_id,
+                    'is_occupied': 0
+                }
+
+                taxi_data.append(es_client.update_op(dict, id=taxi_id))
 
             taxi_type = 'taxi'
 
+            json.dumps(taxi_data)
+
             try:
-                res = es_client.update(index=config['index'],
-                                id=taxi_id,
-                                doc=taxi_doc,
-                                doc_type=taxi_type)
-                print "+++++++++++++updated occupancy++++++++++\n"
-                print res
+                res = es_client.bulk(
+                    taxi_data,
+                    doc_type=taxi_type,
+                    index="taxi_index")
+
+                print "+++++++++++++updated occupancy for %d taxis++++++++++" % len(res['items'])
+                print ("%s\n" % json.dumps(res))
             except Exception as e:
                 print("++++++++++FAILED TO UPDATE GEO+++++++++")
                 print("%s\n", str(e))
 
-            # msg = {}
-            # msg['taxi_id'] = taxi_id
-            # msg['occupancy_status'] = 0
-            #
-            # producer.send_messages(
-            #     self.topic,
-            #     json.dumps(msg))
-            #
-            # print "sending occupancy_update event for taxi %s\n" % taxi_id
+
+            time.sleep(3)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -92,7 +102,7 @@ if __name__ == "__main__":
     # fh = logging.FileHandler('geoupdate.log')
     # fh.setLevel(logging.INFO)
     # logger.addHandler(fh)
-    producer = UserVacatingTaxiProducer(
+    producer = TaxiVacateSimulator(
         config_file=sys.argv[1],
         topic='occupancy_update'
     )
