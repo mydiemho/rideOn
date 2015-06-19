@@ -56,6 +56,7 @@ class TaxiVacateSimulator():
             # no occupied taxi
             if len(hits) == 0:
                 print "++++NO OCCUPIED TAXI FOUND++++++++"
+                time.sleep(10)
                 return
 
             print "+++++++FOUND %f taxis" % len(hits)
