@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 # Kafka producer that reads the input data in a loop in order to simulate real time events
+import csv
 import json
 import random
 import time
@@ -10,17 +11,18 @@ from kafka import KafkaClient, SimpleProducer
 
 
 class Producer():
-    def __init__(self, topic, config_file):
+    def __init__(self, topic, config_file, source_file):
         self.topic = topic
         self.config_file = config_file
-        self.minLat = 32.8697
-        self.minLong = -127.08143
-        self.maxLat = 50.30546
-        self.maxLong = -115.56218
+        self.source_file = source_file
 
     def genData(self, ):
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
+
+        with open(self.source_file, 'rb') as f:
+            reader = csv.DictReader(f)
+            locations = list(reader)
 
         kafka_cluster = config['kafka_cluster']
         kafka_client = KafkaClient(kafka_cluster)
@@ -29,21 +31,22 @@ class Producer():
         kafka_client.ensure_topic_exists(self.topic)
 
         while True:
-            msg = {}
-            latitude = random.uniform(self.minLat, self.maxLat)
-            longitude = random.uniform(self.minLong, self.maxLong)
-            msg['location'] = {
-                'latitude': latitude,
-                'longitude': longitude
-            }
-            producer.send_messages(self.topic, json.dumps(msg))
-            print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
-            time.sleep(1)  # Creating some delay
+            for loc in locations:
+                msg = {}
+                latitude = loc['latitude']
+                longitude = loc['longitude']
+                msg['location'] = {
+                    'latitude': latitude,
+                    'longitude': longitude
+                }
+                producer.send_messages(self.topic, json.dumps(msg))
+                print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
+                time.sleep(0.5)  # Creating some delay
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print "Usage: [*.py] [config_file]"
+    if len(sys.argv) != 3:
+        print "Usage: [*.py] [config_file] [source_file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
@@ -54,7 +57,8 @@ if __name__ == "__main__":
     # logger.addHandler(fh)
     producer = Producer(
         config_file=sys.argv[1],
-        topic='user_request'
+        topic='user_request',
+        source_file=sys.argv[2]
     )
 
     producer.genData()

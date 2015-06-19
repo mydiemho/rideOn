@@ -1,28 +1,34 @@
 #!/usr/bin/python
+import csv
 import sys
-import os
-import math
-import re
-import uuid
-import random
-import pprint
-from datetime import datetime
 
-minLat = 32.8697
-minLong = -127.08143
-maxLat = 50.30546
-maxLong = -115.56218
+# abboip, 37.75134, -122.39488
+import time
 
-# take only first line of each file and compile into a list
-# cabID, lat, long, occucpancy, timestamp
 
-data = []
+def extract(input, outfile):
+    locations = []
+    with open(input, 'rb') as file:
+        reader = csv.DictReader(file)
+        source = list(reader)
 
-def generateUserData():
-    userId = str(uuid.uuid4())
-    latitude = random.uniform(minLat, maxLat)
-    longitude = random.uniform(minLong, maxLong)
-    dt = datetime.now()
-    data = [cabId, latitude, longitude, isOccupied]
-    locations.append(data)
+    locations.append(['latitude', 'longitude'])
+    for row in source:
+        latitude = float(row['latitude'])
+        longitude = float(row['longitude'])
+        data = [latitude, longitude]
+        locations.append(data)
 
+    with open(outfile, 'wb') as myfile:
+        wr = csv.writer(myfile)
+        wr.writerows(locations)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 3:
+        print "Usage: [*.py] input, outFile"
+        sys.exit(0)
+
+    input = sys.argv[1]
+    outfile = sys.argv[2]
+    extract(input, outfile)
