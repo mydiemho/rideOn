@@ -33,14 +33,14 @@ class Producer():
         while True:
             for loc in locations:
                 msg = {}
-                latitude = loc['latitude']
-                longitude = loc['longitude']
+                latitude = float(loc['latitude'])
+                longitude = float(loc['longitude'])
                 msg['location'] = {
                     'latitude': latitude,
                     'longitude': longitude
                 }
                 producer.send_messages(self.topic, json.dumps(msg))
-                print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
+                print "sending %s event for lat: %f, long: %f\n" % (self.topic, latitude, longitude)
                 time.sleep(0.5)  # Creating some delay
 
 
