@@ -3,7 +3,7 @@ import logging
 import random
 
 from kafka import KafkaClient, SimpleProducer
-import pyelasticsearch
+from pyelasticsearch import ElasticSearch
 from pyleus.storm import SimpleBolt
 
 # Storm bolt that toggle occupancy status to simulate user vacating taxi
@@ -20,10 +20,9 @@ KAFKA_CLUSTER = "52.8.145.247:9092,52.8.148.251:9092,52.8.158.130:9092,52.8.162.
 
 log = logging.getLogger("geo_update_topology.geo_update_bolt")
 
-es_client = pyelasticsearch.ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
+es_client = ElasticSearch(urls=ELASTIC_SEARCH_CLUSTER)
 kafka_client = KafkaClient(hosts=KAFKA_CLUSTER)
 producer = SimpleProducer(kafka_client)
-
 
 class OccupancyUpdateBolt(SimpleBolt):
     OUTPUT_FIELDS = ['geo_update']
