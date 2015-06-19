@@ -6,6 +6,8 @@ import json
 import sys
 
 from kafka import KafkaClient, SimpleProducer
+import time
+
 
 class Producer():
     def __init__(self, topic, config_file, source_file):
@@ -42,6 +44,8 @@ class Producer():
                 msg['location'] = location
                 kafka_producer.send_messages(self.topic, json.dumps(msg))
                 print "sending location update for taxi %s" % cabId
+
+                time.sleep(1)
 
 
 if __name__ == "__main__":

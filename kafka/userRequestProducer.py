@@ -38,7 +38,7 @@ class Producer():
             }
             producer.send_messages(self.topic, json.dumps(msg))
             print "sending %s event for lat: %d, long: %d\n" % (self.topic, latitude, longitude)
-            # time.sleep(2)  # Creating some delay
+            time.sleep(1)  # Creating some delay
 
 
 if __name__ == "__main__":
