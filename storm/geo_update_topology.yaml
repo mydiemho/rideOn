@@ -8,7 +8,7 @@ topology:
 
 - spout:
         name: kafka-geo-spout
-        parallelism_hint: 3
+        parallelism_hint: 4
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -41,8 +41,7 @@ topology:
 
 - bolt:
         name: geo_update_bolt
-        parallelism_hint: 3
+        parallelism_hint: 8
         module: geo_update_topology.geoUpdateBolt
-        tick_freq_secs: 5.0
         groupings:
             - shuffle_grouping: kafka-geo-spout

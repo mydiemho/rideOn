@@ -2,13 +2,13 @@
 #
 name: request_processing_topology
 
-workers: 4
+workers: 2
 
 topology:
 
 - spout:
         name: kafka-spout
-        parallelism_hint: 3
+        parallelism_hint: 4
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -41,8 +41,7 @@ topology:
 
 - bolt:
         name: request_processing_bolt
-        parallelism_hint: 3
+        parallelism_hint: 8
         module: request_processing_topology.requestProcessingBolt
-        tick_freq_secs: 5.0
         groupings:
             - shuffle_grouping: kafka-spout
