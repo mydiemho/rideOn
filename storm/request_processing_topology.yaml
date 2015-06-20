@@ -2,7 +2,7 @@
 #
 name: request_processing_topology
 
-workers: 2
+workers: 4
 
 topology:
 

@@ -4,9 +4,9 @@
 import csv
 import json
 import sys
+import time
 
 from kafka import KafkaClient, SimpleProducer
-import time
 
 
 class Producer():
@@ -19,38 +19,36 @@ class Producer():
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        kafka_cluster = config['kafka_cluster']
-        source_file = self.source_file
-
-        kafka_client = KafkaClient(kafka_cluster)
-
-        kafka_producer = SimpleProducer(kafka_client)
-
-        with open(source_file) as f:
-            reader = csv.reader(f)
+        with open(self.source_file) as f:
+            reader = csv.DictReader(f)
             taxiLocations = list(reader)
 
-        while True:
-            for loc in taxiLocations:
-                cabId = loc[0]
-                latitude = loc[1]
-                longitude = loc[2]
-                msg = {}
-                msg['taxi_id'] = cabId
-                location = {
-                    'latitude': latitude,
-                    'longitude': longitude
-                }
-                msg['location'] = location
-                kafka_producer.send_messages(self.topic, json.dumps(msg))
-                print "sending location update for taxi %s" % cabId
+        kafka_cluster = config['kafka_cluster']
+        kafka_client = KafkaClient(kafka_cluster)
+        kafka_producer = SimpleProducer(kafka_client)
 
-                time.sleep(1)
+        # while True:
+        for loc in taxiLocations:
+            print loc.keys()
+            cabId = loc["taxi_id"]
+            latitude = float(loc['latitude'])
+            longitude = float(loc['longitude'])
+            msg = {}
+            msg['taxi_id'] = cabId
+            location = {
+                'latitude': latitude,
+                'longitude': longitude
+            }
+            msg['location'] = location
+            kafka_producer.send_messages(self.topic, json.dumps(msg))
+            print "sending location update for taxi %s" % cabId
+
+        # time.sleep(5)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print "Usage: [*.py] [source-file]"
+    if len(sys.argv) != 3:
+        print "Usage: [*.py] [config-file] [source-file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
@@ -60,9 +58,9 @@ if __name__ == "__main__":
     # fh.setLevel(logging.INFO)
     # logger.addHandler(fh)
     producer = Producer(
-        config_file='config.json',
+        config_file=sys.argv[1],
         topic='location_update',
-        source_file=sys.argv[1]
+        source_file=sys.argv[2]
     )
 
     producer.genData()
