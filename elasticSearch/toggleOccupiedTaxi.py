@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Kafka producer that sends events in a loop in order to simulate user vacating taxi
+# search for occupied taxis and toggle occupied state in order to simulate user vacating taxi
 import json
 import random
 import sys
@@ -19,9 +19,6 @@ class TaxiVacateSimulator():
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        kafka_cluster = config['kafka_cluster']
-        client = KafkaClient(kafka_cluster)
-        producer = SimpleProducer(client)
         es_client = ElasticSearch(config['es_cluster'])
 
         while True:
@@ -96,13 +93,7 @@ if __name__ == "__main__":
     if len(sys.argv) != 2:
         print "Usage: [*.py] [config_file]"
         sys.exit(0)
-        # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
-    # logger = logging.getLogger('geo_app')
-    # # create file handler which logs even debug messages
-    # fh = logging.FileHandler('geoupdate.log')
-    # fh.setLevel(logging.INFO)
-    # logger.addHandler(fh)
     producer = TaxiVacateSimulator(
         config_file=sys.argv[1],
         topic='occupancy_update'
