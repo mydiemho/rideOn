@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-kafka/taxiGeoProducer.py kafka/config.json data/locations.csv
+kafka/taxiGeoProducer.py kafka/config.json $1
