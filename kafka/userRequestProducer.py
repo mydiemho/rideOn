@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+# SOURCE: https://www.google.com/fusiontables/data?docid=1SQDRZUcWMz22pkwKSRD3-prXN8uZUbkfoXYChfE#rows:id=1
+
 # Kafka producer that reads the input data in a loop in order to simulate real time events
 import csv
 import json
