@@ -50,6 +50,8 @@ logfile_maxbytes=20MB
 logfile_backups=10
 
 =======================Install on all node============================
+=== add "export JMX_PORT=${JMX_PORT:-9999}" to kafka-server-start.sh to enable jmx====
+
 [program:kafka]
 command=pidproxy /var/run/kafka.pid /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
 user=ubuntu
