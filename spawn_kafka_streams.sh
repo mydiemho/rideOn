@@ -6,5 +6,5 @@ for ID in `seq 1 $NUM_SPAWNS`;
 do
     echo "data/locations" + $(($ID%4)) + ".csv"
 #    tmux new-window -t $ID
-#    tmux send-keys -t $SESSION:$ID 'kafka/taxiGeoProducer.py kafka/config.json data/locations' + $(($ID%4)) + '.csv' C-m
+#    tmux send-keys -t $SESSION:$ID 'kafka/locationProducer.py kafka/config.json data/locations' + $(($ID%4)) + '.csv' C-m
 done

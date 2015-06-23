@@ -1,13 +1,10 @@
 #!/usr/bin/python
 
-# SOURCE: https://www.google.com/fusiontables/data?docid=1SQDRZUcWMz22pkwKSRD3-prXN8uZUbkfoXYChfE#rows:id=1
-
 # Kafka producer that reads the input data in a loop in order to simulate real time events
 import csv
 import json
-import random
-import time
 import sys
+import time
 
 from kafka import KafkaClient, SimpleProducer
 
@@ -18,37 +15,37 @@ class Producer():
         self.config_file = config_file
         self.source_file = source_file
 
-    def genData(self, ):
+    def genData(self):
         with open(self.config_file, 'rb') as config_file:
             config = json.load(config_file)
 
-        with open(self.source_file, 'rb') as f:
+        with open(self.source_file) as f:
             reader = csv.DictReader(f)
-            locations = list(reader)
+            taxiLocations = list(reader)
 
         kafka_cluster = config['kafka_cluster']
         kafka_client = KafkaClient(kafka_cluster)
-        producer = SimpleProducer(kafka_client)
+        kafka_producer = SimpleProducer(kafka_client)
 
-        kafka_client.ensure_topic_exists(self.topic)
-
-        while True:
-            for loc in locations:
-                msg = {}
-                latitude = float(loc['latitude'])
-                longitude = float(loc['longitude'])
-                msg['location'] = {
-                    'latitude': latitude,
-                    'longitude': longitude
-                }
-                producer.send_messages(self.topic, json.dumps(msg))
-                print "sending %s event for lat: %f, long: %f\n" % (self.topic, latitude, longitude)
-                time.sleep(0.5)  # Creating some delay
+        for loc in taxiLocations:
+            print loc.keys()
+            cabId = loc["taxi_id"]
+            latitude = float(loc['latitude'])
+            longitude = float(loc['longitude'])
+            msg = {}
+            msg['taxi_id'] = cabId
+            location = {
+                'latitude': latitude,
+                'longitude': longitude
+            }
+            msg['location'] = location
+            kafka_producer.send_messages(self.topic, json.dumps(msg))
+            print "sending location update for taxi %s" % cabId
 
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print "Usage: [*.py] [config_file] [source_file]"
+        print "Usage: [*.py] [config-file] [source-file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
@@ -59,7 +56,7 @@ if __name__ == "__main__":
     # logger.addHandler(fh)
     producer = Producer(
         config_file=sys.argv[1],
-        topic='user_request',
+        topic='location',
         source_file=sys.argv[2]
     )
 
