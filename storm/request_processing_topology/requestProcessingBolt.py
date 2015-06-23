@@ -25,7 +25,6 @@ producer = SimpleProducer(kafka_client)
 
 
 class RequestProcessingBolt(SimpleBolt):
-    OUTPUT_FIELDS = ['request']
 
     def process_tuple(self, tup):
         request = tup.values

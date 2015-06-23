@@ -2,13 +2,14 @@
 #
 name: geo_update_topology
 
-workers: 4
+workers: 3
 
 topology:
 
 - spout:
         name: kafka-geo-spout
-        parallelism_hint: 4
+        parallelism_hint: 3
+        task: 6
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -41,7 +42,8 @@ topology:
 
 - bolt:
         name: geo_update_bolt
-        parallelism_hint: 8
+        parallelism_hint: 6
+        task: 12
         module: geo_update_topology.geoUpdateBolt
         groupings:
             - shuffle_grouping: kafka-geo-spout
