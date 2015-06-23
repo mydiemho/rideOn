@@ -27,21 +27,24 @@ class Producer():
         kafka_client = KafkaClient(kafka_cluster)
         kafka_producer = SimpleProducer(kafka_client)
 
-        for loc in taxiLocations:
-            print loc.keys()
-            cabId = loc["taxi_id"]
-            latitude = float(loc['latitude'])
-            longitude = float(loc['longitude'])
-            msg = {}
-            msg['taxi_id'] = cabId
-            location = {
-                'latitude': latitude,
-                'longitude': longitude
-            }
-            msg['location'] = location
-            kafka_producer.send_messages(self.topic, json.dumps(msg))
-            print "sending location update for taxi %s" % cabId
-
+        count = 0
+        while True:
+            for loc in taxiLocations:
+                print loc.keys()
+                cabId = loc["taxi_id"]
+                latitude = float(loc['latitude'])
+                longitude = float(loc['longitude'])
+                msg = {}
+                msg['taxi_id'] = cabId
+                location = {
+                    'latitude': latitude,
+                    'longitude': longitude
+                }
+                msg['location'] = location
+                kafka_producer.send_messages(self.topic, json.dumps(msg))
+                print "sending location update for taxi %s" % cabId
+            count += 1
+            print "+++++++++++++FINISH ROUND %d+++++++++++++++++" % count
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:

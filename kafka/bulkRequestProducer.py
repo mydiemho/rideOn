@@ -32,6 +32,7 @@ class Producer():
 
         kafka_client.ensure_topic_exists(self.topic)
 
+        count = 0
         while True:
             for loc in locations:
                 msg = {}
@@ -44,6 +45,8 @@ class Producer():
                 producer.send_messages(self.topic, json.dumps(msg))
                 print "sending %s event for lat: %f, long: %f\n" % (self.topic, latitude, longitude)
                 time.sleep(0.5)  # Creating some delay
+            count += 1
+            print "+++++++++++++FINISH ROUND %d+++++++++++++++++" % count
 
 
 if __name__ == "__main__":
