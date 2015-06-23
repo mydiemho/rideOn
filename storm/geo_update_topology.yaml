@@ -9,7 +9,7 @@ topology:
 - spout:
         name: kafka-geo-spout
         parallelism_hint: 3
-        task: 6
+        tasks: 6
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -43,7 +43,7 @@ topology:
 - bolt:
         name: geo_update_bolt
         parallelism_hint: 6
-        task: 12
+        tasks: 12
         module: geo_update_topology.geoUpdateBolt
         groupings:
             - shuffle_grouping: kafka-geo-spout

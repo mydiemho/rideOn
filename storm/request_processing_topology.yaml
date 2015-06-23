@@ -9,7 +9,7 @@ topology:
 - spout:
         name: kafka-spout
         parallelism_hint: 3
-        task: 6
+        tasks: 6
         type: kafka
         options:
             # The Kafka topic to stream from.
@@ -43,7 +43,7 @@ topology:
 - bolt:
         name: request_processing_bolt
         parallelism_hint: 6
-        task: 12
+        tasks: 12
         module: request_processing_topology.requestProcessingBolt
         groupings:
             - shuffle_grouping: kafka-spout
