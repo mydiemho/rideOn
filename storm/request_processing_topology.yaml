@@ -14,7 +14,7 @@ topology:
         options:
             # The Kafka topic to stream from.
             # Required.
-            topic: "user_request"
+            topic: "request"
 
             # ZooKeeper connection string. Comma-separated list of ZooKeeper
             # servers.
