@@ -6,7 +6,7 @@ from pyleus.storm import SimpleBolt
 
 from kafka import KafkaClient, SimpleProducer
 
-with open("../../config/config.json", 'rb') as file:
+with open("/home/ubuntu/rideOn/config/config.json", 'rb') as file:
     config = json.load(file)
 
 # GOTCHA:

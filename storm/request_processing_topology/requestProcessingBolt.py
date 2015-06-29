@@ -10,7 +10,7 @@ from kafka import KafkaClient, SimpleProducer
 INDEX_NAME = 'taxi_index'
 QUERY_SIZE = 10
 
-with open("../../config/config.json", 'rb') as file:
+with open("/home/ubuntu/rideOn/config/config.json", 'rb') as file:
     config = json.load(file)
 
 # GOTCHA:

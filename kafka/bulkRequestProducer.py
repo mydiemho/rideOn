@@ -48,7 +48,7 @@ class Producer():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 2:
         print "Usage: [*.py] [source_file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
