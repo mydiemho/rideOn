@@ -1,0 +1,24 @@
+=====================FIND available cabs that falls WITHIN 2KM Radius====================
+
+https://www.elastic.co/guide/en/elasticsearch/guide/current/geo-distance.html
+https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-geo-distance-range-filter.html
+
+GET /taxi_index/taxi/_search
+{
+  "from": 0,
+  "size": 100,
+  "query": {
+    "match": {
+      "is_occupied": "0"
+    }
+  },
+  "filter": {
+    "geo_distance": {
+      "distance": "2km",
+      "location": {
+        "lat": 37.775,
+        "lon": -122.4183333
+      }
+    }
+  }
+}
