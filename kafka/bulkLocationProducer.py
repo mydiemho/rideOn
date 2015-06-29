@@ -4,26 +4,23 @@
 import csv
 import json
 import sys
-import time
 
+from .. config import config
 from kafka import KafkaClient, SimpleProducer
 
 
 class Producer():
-    def __init__(self, topic, config_file, source_file):
+    def __init__(self, topic, source_file):
         self.topic = topic
-        self.config_file = config_file
         self.source_file = source_file
 
     def genData(self):
-        with open(self.config_file, 'rb') as config_file:
-            config = json.load(config_file)
 
         with open(self.source_file) as f:
             reader = csv.DictReader(f)
             taxiLocations = list(reader)
 
-        kafka_cluster = config['kafka_cluster']
+        kafka_cluster = config.kafka_cluster
         kafka_client = KafkaClient(kafka_cluster)
         kafka_producer = SimpleProducer(kafka_client)
 
@@ -46,9 +43,10 @@ class Producer():
             count += 1
             print "+++++++++++++FINISH ROUND %d+++++++++++++++++" % count
 
+
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print "Usage: [*.py] [config-file] [source-file]"
+        print "Usage: [*.py] [source-file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
@@ -58,9 +56,8 @@ if __name__ == "__main__":
     # fh.setLevel(logging.INFO)
     # logger.addHandler(fh)
     producer = Producer(
-        config_file=sys.argv[1],
         topic='location',
-        source_file=sys.argv[2]
+        source_file=sys.argv[1]
     )
 
     producer.genData()

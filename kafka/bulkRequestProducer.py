@@ -5,28 +5,24 @@
 # Kafka producer that reads the input data in a loop in order to simulate real time events
 import csv
 import json
-import random
 import time
 import sys
 
+from ..config import config
 from kafka import KafkaClient, SimpleProducer
 
 
 class Producer():
-    def __init__(self, topic, config_file, source_file):
+    def __init__(self, topic, source_file):
         self.topic = topic
-        self.config_file = config_file
         self.source_file = source_file
 
     def genData(self, ):
-        with open(self.config_file, 'rb') as config_file:
-            config = json.load(config_file)
-
         with open(self.source_file, 'rb') as f:
             reader = csv.DictReader(f)
             locations = list(reader)
 
-        kafka_cluster = config['kafka_cluster']
+        kafka_cluster = config.kafka_cluster
         kafka_client = KafkaClient(kafka_cluster)
         producer = SimpleProducer(kafka_client)
 
@@ -51,7 +47,7 @@ class Producer():
 
 if __name__ == "__main__":
     if len(sys.argv) != 3:
-        print "Usage: [*.py] [config_file] [source_file]"
+        print "Usage: [*.py] [source_file]"
         sys.exit(0)
         # logging.basicConfig(filename='error.log',level=logging.DEBUG)
 
@@ -61,9 +57,8 @@ if __name__ == "__main__":
     # fh.setLevel(logging.INFO)
     # logger.addHandler(fh)
     producer = Producer(
-        config_file=sys.argv[1],
         topic='request',
-        source_file=sys.argv[2]
+        source_file=sys.argv[1]
     )
 
     producer.genData()

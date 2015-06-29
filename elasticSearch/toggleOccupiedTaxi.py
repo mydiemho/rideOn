@@ -7,19 +7,16 @@ import sys
 import time
 
 from pyelasticsearch import ElasticSearch
-from kafka import KafkaClient, SimpleProducer
+
+from ..config import config
 
 
 class TaxiVacateSimulator():
-    def __init__(self, topic, config_file):
+    def __init__(self, topic):
         self.topic = topic
-        self.config_file = config_file
 
     def genData(self, ):
-        with open(self.config_file, 'rb') as config_file:
-            config = json.load(config_file)
-
-        es_client = ElasticSearch(config['es_cluster'])
+        es_client = ElasticSearch(config.es_cluster)
 
         while True:
 
@@ -86,8 +83,8 @@ class TaxiVacateSimulator():
                 print("++++++++++FAILED TO UPDATE GEO+++++++++")
                 print("%s\n", str(e))
 
-
             time.sleep(3)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -95,7 +92,6 @@ if __name__ == "__main__":
         sys.exit(0)
 
     producer = TaxiVacateSimulator(
-        config_file=sys.argv[1],
         topic='occupancy_update'
     )
 
