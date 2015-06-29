@@ -7,6 +7,8 @@ import sys
 
 from pyelasticsearch.client import ElasticSearch
 
+from ..config import config
+
 source = sys.argv[1]
 
 INDEX_NAME = 'taxi_index'
@@ -15,7 +17,7 @@ ID_FIELD = 'taxi_id'
 
 taxi_data = []
 occupancy_data = []
-es = ElasticSearch()
+es = ElasticSearch(config.es_cluster)
 
 
 def create_index():
