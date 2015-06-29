@@ -7,6 +7,7 @@ import sys
 
 from kafka import KafkaClient, SimpleProducer
 
+
 class Producer():
     def __init__(self, topic, source_file):
         self.topic = topic
@@ -15,7 +16,6 @@ class Producer():
             self.config = json.load(file)
 
     def genData(self):
-
         with open(self.source_file) as f:
             reader = csv.DictReader(f)
             taxiLocations = list(reader)

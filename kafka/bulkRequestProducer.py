@@ -8,7 +8,6 @@ import json
 import time
 import sys
 
-from ..config import config
 from kafka import KafkaClient, SimpleProducer
 
 

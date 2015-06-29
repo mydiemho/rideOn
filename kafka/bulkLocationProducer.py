@@ -5,7 +5,6 @@ import csv
 import json
 import sys
 
-from .. config import config
 from kafka import KafkaClient, SimpleProducer
 
 
