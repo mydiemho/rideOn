@@ -4,11 +4,13 @@ name: request_processing_topology
 
 workers: 3
 
+max_spout_pending: 36
+
 topology:
 
 - spout:
         name: kafka-spout
-        parallelism_hint: 6
+        parallelism_hint: 12
         tasks: 12
         type: kafka
         options:
@@ -43,7 +45,7 @@ topology:
 - bolt:
         name: request_processing_bolt
         parallelism_hint: 12
-        tasks: 24
+        tasks: 12
         module: request_processing_topology.requestProcessingBolt
         groupings:
             - shuffle_grouping: kafka-spout

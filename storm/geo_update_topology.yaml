@@ -4,11 +4,13 @@ name: geo_update_topology
 
 workers: 3
 
+max_spout_pending: 96
+
 topology:
 
 - spout:
         name: kafka-geo-spout
-        parallelism_hint: 6
+        parallelism_hint: 12
         tasks: 12
         type: kafka
         options:
@@ -43,7 +45,7 @@ topology:
 - bolt:
         name: geo_update_bolt
         parallelism_hint: 12
-        tasks: 24
+        tasks: 12
         module: geo_update_topology.geoUpdateBolt
         groupings:
             - shuffle_grouping: kafka-geo-spout
