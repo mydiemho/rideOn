@@ -3,11 +3,10 @@
 # model 1: two separate types
 
 import csv
+import json
 import sys
 
 from pyelasticsearch.client import ElasticSearch
-
-from ..config import config
 
 source = sys.argv[1]
 
@@ -17,7 +16,11 @@ ID_FIELD = 'taxi_id'
 
 taxi_data = []
 occupancy_data = []
-es = ElasticSearch(config.es_cluster)
+
+with open("../config/config.json", 'rb') as file:
+    config = json.load(file)
+
+es = ElasticSearch(config['es_cluster'])
 
 
 def create_index():
@@ -92,7 +95,6 @@ def write_es():
     print len(res['hits']['hits']), "documents found"
     print "sample result"
     print res['hits']['hits'][0]
-
 
 create_index()
 get_data(source)

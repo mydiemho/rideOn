@@ -13,6 +13,8 @@ class Producer():
     def __init__(self, topic, source_file):
         self.topic = topic
         self.source_file = source_file
+        with open("../config/config.json", 'rb') as file:
+            self.config = json.load(file)
 
     def genData(self):
 
@@ -20,7 +22,7 @@ class Producer():
             reader = csv.DictReader(f)
             taxiLocations = list(reader)
 
-        kafka_cluster = config.kafka_cluster
+        kafka_cluster = self.config['kafka_cluster']
         kafka_client = KafkaClient(kafka_cluster)
         kafka_producer = SimpleProducer(kafka_client)
 

@@ -1,18 +1,19 @@
 import json
 import logging
 
-from ... config import config
-
-from kafka import KafkaClient, SimpleProducer
 import pyelasticsearch
 from pyleus.storm import SimpleBolt
 
+from kafka import KafkaClient, SimpleProducer
+
+with open("../../config/config.json", 'rb') as file:
+    config = json.load(file)
 
 # GOTCHA:
 # have to include "http://" and ends with "/", else will throw error
-ELASTIC_SEARCH_CLUSTER = config.es_cluster
+ELASTIC_SEARCH_CLUSTER = config['es_cluster']
 
-KAFKA_CLUSTER = config.kafka_cluster
+KAFKA_CLUSTER = config['kafka_cluster']
 
 log = logging.getLogger("geo_update_topology.geo_update_bolt")
 
@@ -22,7 +23,6 @@ producer = SimpleProducer(kafka_client)
 
 
 class GeoUpdateBolt(SimpleBolt):
-
     def process_tuple(self, tup):
         request = tup.values
 

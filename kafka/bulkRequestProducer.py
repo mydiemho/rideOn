@@ -16,13 +16,15 @@ class Producer():
     def __init__(self, topic, source_file):
         self.topic = topic
         self.source_file = source_file
+        with open("../config/config.json", 'rb') as file:
+            self.config = json.load(file)
 
-    def genData(self, ):
+    def genData(self):
         with open(self.source_file, 'rb') as f:
             reader = csv.DictReader(f)
             locations = list(reader)
 
-        kafka_cluster = config.kafka_cluster
+        kafka_cluster = self.config['kafka_cluster']
         kafka_client = KafkaClient(kafka_cluster)
         producer = SimpleProducer(kafka_client)
 

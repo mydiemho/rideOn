@@ -3,20 +3,21 @@ import logging
 import random
 
 import pyelasticsearch
-
 from pyleus.storm import SimpleBolt
 
-from ...config import config
 from kafka import KafkaClient, SimpleProducer
 
 INDEX_NAME = 'taxi_index'
 QUERY_SIZE = 10
 
+with open("../../config/config.json", 'rb') as file:
+    config = json.load(file)
+
 # GOTCHA:
 # have to include "http://" and ends with "/", else will throw error
-ELASTIC_SEARCH_CLUSTER = config.es_cluster
+ELASTIC_SEARCH_CLUSTER = config['es_cluster']
 
-KAFKA_CLUSTER = config.kafka_cluster
+KAFKA_CLUSTER = config['kafka_cluster']
 
 log = logging.getLogger("request_processing_topology.request_bolt")
 
@@ -58,7 +59,6 @@ class RequestProcessingBolt(SimpleBolt):
         log.debug("++++++++++++++++executing search query+++++++++++++++")
         res = es.search(query, index=INDEX_NAME)
 
-
         hits = res['hits']['hits']
         hits_count = len(hits)
 
@@ -99,6 +99,7 @@ class RequestProcessingBolt(SimpleBolt):
             # producer.send_messages(
             #     "occupancy_update",
             #     json.dumps(msg))
+
 
 if __name__ == '__main__':
     logging.basicConfig(
