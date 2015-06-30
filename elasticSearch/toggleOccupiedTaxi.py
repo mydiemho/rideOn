@@ -8,15 +8,14 @@ import time
 
 from pyelasticsearch import ElasticSearch
 
-from ..config import config
-
 
 class TaxiVacateSimulator():
-    def __init__(self, topic):
-        self.topic = topic
+    def __init__(self):
+        with open("/home/ubuntu/rideOn/config/config.json", 'rb') as file:
+            self.config = json.load(file)
 
     def genData(self, ):
-        es_client = ElasticSearch(config.es_cluster)
+        es_client = ElasticSearch(self.config['es_cluster'])
 
         while True:
 
@@ -87,12 +86,10 @@ class TaxiVacateSimulator():
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print "Usage: [*.py] [config_file]"
+    if len(sys.argv) != 1:
+        print "Usage: [*.py]"
         sys.exit(0)
 
-    producer = TaxiVacateSimulator(
-        topic='occupancy_update'
-    )
+    producer = TaxiVacateSimulator()
 
     producer.genData()
