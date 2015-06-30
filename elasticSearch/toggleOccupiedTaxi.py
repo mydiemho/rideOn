@@ -42,7 +42,7 @@ class TaxiVacateSimulator():
             }
 
             print "++++++++++++executing search query++++++++++++++"
-            res = es_client.search(query, index=config['index'])
+            res = es_client.search(query, index=self.config['index'])
 
             hits = res['hits']['hits']
 
