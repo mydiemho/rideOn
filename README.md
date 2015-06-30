@@ -29,9 +29,9 @@ Read further for more details about the project
 
 To simulate car movement, I used a dataset of mobility traces of taxi cabs in San Francisco, USA provided by [CRAWDAD](http://crawdad.org/epfl/mobility/).
 
-To simulate user request, I used locations of businesses in San Francisco as check points.
-
 ![data](images/taxi_data.png)
+
+To simulate user request, I used businesses in San Francisco as check points.
 
 ![data](images/user_data.png)
 
