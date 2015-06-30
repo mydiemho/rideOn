@@ -117,7 +117,7 @@ Ubunut instances have a default value of 1024, which is not enought for Elastics
 
 Please see [instructions](notes/supervisordConfig.txt) for setting up supervisord for Kafka, Zookeeper and Storm
 
-### GOTCHAS
+#### GOTCHAS
 Make sure to give whatever user (if not root) you specified in the config file permission to Kafka, Zookeeper and Storm home directories.
 
 	sudo chown ubuntu -R [$KAFKA_HOME/$ZOOKEEPER_HOME/$STORM_HOME]
