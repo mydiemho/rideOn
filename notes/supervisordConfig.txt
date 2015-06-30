@@ -74,8 +74,3 @@ stopsignal=KILL
 user=ubuntu
 stderr_logfile=/usr/local/zookeeper/logs/zk.err.log
 stdout_logfile=/usr/local/zookeeper/logs/zk.out.log
-
-
-groupByNode(storm.cluster.metrics.*.*.*.*.*.*.*.*.__execute-count.*, 4, 'sumSeries')
-
-storm.cluster.metrics.request_processing_topology.kafka-spout.ip-172-31-14-123.us-west-1.compute.internal.6703.7.__transfer-count.__metrics
