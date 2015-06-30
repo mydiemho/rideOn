@@ -83,7 +83,7 @@ Instructions are specific to Debian/Ubuntu.
 
 #### Recommended configurations change
 
-###### [Set heap size](https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html#_give_half_your_memory_to_lucene)
+###### [Heap size](https://www.elastic.co/guide/en/elasticsearch/guide/current/heap-sizing.html#_give_half_your_memory_to_lucene)
 
 Elasticsearch is preconfigured with a 1GB heap, which is too small for most setup.  The recommended value is **half** of your instance's memory, ie. 4g if you have 8b of memory.  Uncomment the following line in **/etc/default/elasticsearch** and replace the default with your desired value.
 
@@ -105,6 +105,9 @@ Ubunut instances have a default value of 1024, which is not enought for Elastics
 #### Now you can start your service
 	sudo /etc/init.d/elasticsearch start
 	
+### Configuration files
+Please see [configurations](notes/configurations) for the settings I use for my set up.
+ 
 ## Supervisord
 
 > It's critical that you run Zookeeper under supervision, since Zookeeper is fail-fast and will exit the process if it encounters any error case.
@@ -115,13 +118,109 @@ Ubunut instances have a default value of 1024, which is not enought for Elastics
 > 
 > [Storm documentation](https://storm.apache.org/documentation/Setting-up-a-Storm-cluster.html)
 
-Please see [instructions](notes/supervisordConfig.txt) for setting up supervisord for Kafka, Zookeeper and Storm
+### Storm
+#### Master node: Nimbus and UI daemons
+Add the following lines to **/etc/supervisord.conf/storm.conf** on the nimbus node:
+
+	[program:storm-nimbus]
+	command=/usr/local/storm/bin/storm nimbus
+	user=ubuntu
+	autostart=true
+	autorestart=true
+	startsecs=10
+	startretries=999
+	log_stdout=true
+	log_stderr=true
+	logfile=/usr/local/storm/logs/nimbus.out
+	logfile_maxbytes=20MB
+	logfile_backups=10
+
+	[program:storm-ui]
+	command=/usr/local/storm/bin/storm ui
+	user=ubuntu
+	autostart=true
+	autorestart=true
+	startsecs=10
+	startretries=999
+	log_stdout=true
+	log_stderr=true
+	logfile=/usr/local/storm/logs/ui.out
+	logfile_maxbytes=20MB
+	logfile_backups=10
+
+#### Superivsor nodes: supervisor daemons
+Add the following lines to **/etc/supervisord.conf/storm.conf** on all the superviosr nodes:
+
+	[program:storm-supervisor]
+	command=/usr/local/storm/bin/storm supervisor
+	user=ubuntu
+	autostart=true
+	autorestart=true
+	startsecs=10
+	startretries=999
+	log_stdout=true
+	log_stderr=true
+	logfile=/usr/local/storm/logs/supervisor.out
+	logfile_maxbytes=20MB
+	logfile_backups=10
+
+### Kafka
+
+Add the following lines to **/etc/supervisord.conf/kafka.conf** on all the kafka nodes:
+
+	[program:kafka]
+	command=pidproxy /var/run/kafka.pid /usr/local/kafka/bin/kafka-server-start.sh /usr/local/kafka/config/server.properties
+	user=ubuntu
+	autostart=false
+	autorestart=true
+	startsecs=10
+	startretries=999
+	log_stdout=true
+	log_stderr=true
+	logfile=/usr/local/kafka/logs/supervisord-kafka.out
+	logfile_maxbytes=20MB
+	logfile_backups=10
+	stopasgroup=true
+
+* If you want to enable JMX port, add the following line to **kafka-server-start.sh**
+
+		export JMX_PORT=${JMX_PORT:-9999}
+	
+* Kafka are not set to autorun on first start up because we want zookeeper to be up and running firt.  Start kafka manually after checking that zookeeper is up and running.  You only have to do this once when you first set up the cluster or when the instance reboot.
+		
+		# verify that zookeeper is up
+		sudo supervisorctl status
+	
+		# start kafka manually
+		sudo supervisorctl start kafka
+	
+### Zookeeper
+
+Add the following lines to **/etc/supervisord.conf/zookeeper.conf** on all the zookeeper nodes:
+
+	[program:zookeeper]
+	command=/usr/local/zookeeper/bin/zkServer.sh start-foreground
+	autostart=true
+	autorestart=true
+	stopsignal=KILL
+	user=ubuntu
+	stderr_logfile=/usr/local/zookeeper/logs/zk.err.log
+	stdout_logfile=/usr/local/zookeeper/logs/zk.out.log
+
+### Usage
+
+Run the following command on each node.  
+
+	sudo service supervisord start
+	
+	# To verify whether daemons started successfully
+	sudo supervisorctl status
 
 #### GOTCHAS
 Make sure to give whatever user (if not root) you specified in the config file permission to Kafka, Zookeeper and Storm home directories.
 
 	sudo chown ubuntu -R [$KAFKA_HOME/$ZOOKEEPER_HOME/$STORM_HOME]
-
+	
 
 ## Presentation Deck
 My presentation slides are available at [slideshare](http://www.slideshare.net/MsSophieHowl/my-ho-week5demo).
