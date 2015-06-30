@@ -1,2 +1,2 @@
 #!/bin/bash
-pyleus -c pyleus.conf build $1
+pyleus --verbose -c pyleus.conf build $1
