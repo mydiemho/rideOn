@@ -61,7 +61,7 @@ Instructions are specific to Debian/Ubuntu.
 
 ### Elasticsearch
 
-#### The following instruction is for installing and running elasticsearch as a service
+#### The following [instruction](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-repositories.html) is for installing and running elasticsearch as a service
 
 	wget -qO - https://packages.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 	echo "deb http://packages.elastic.co/elasticsearch/1.6/debian stable main" | sudo tee -a /etc/apt/sources.list
@@ -70,7 +70,7 @@ Instructions are specific to Debian/Ubuntu.
 	#if you're using AWS instaces, the following plugin will allows the nodes in the cluster to discover each other.
 	sudo /usr/share/elasticsearch/bin/plugin install elasticsearch/elasticsearch-cloud-aws/2.5.0
 
-##### Here are a few useful directories
+##### Here are a few useful [directories](https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-dir-layout.html)
 
 ###### Plugins
 /usr/share/elasticsearch/bin/plugin
