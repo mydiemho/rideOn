@@ -8,17 +8,19 @@ RideOn
 **RideOn** is an open-source data pipeline to simulate realtime ridesharing. It includes a map that let user search for nearby cars and visualizations that monitor the pipeline.
 
 It makes use of the following technologies:
+
 - Apache Zookeeper 3.4.6
 - Apache Kafka 0.8.2.1
 - Apache Storm 0.9.2
 - Elasticsearch 1.6.0
-- Flask with the following frameworks: Google Map, jQuery, Bootstrap
-- Kafka-Python 0.9.2 (Kafka with Python)
-- Pyleus 0.2.4 (Storm with Python)
-- pyelasticsearch 1.3 (Elasticsearch with Python)
+- Flask with the following frameworks: [Google Maps](https://developers.google.com/maps/documentation/javascript/), jQuery, [Bootstrap](http://getbootstrap.com/)
+- [Kafka-Python](https://github.com/mumrah/kafka-python) 0.9.2 (Kafka with Python)
+- [pyleus](https://github.com/Yelp/pyleus 0.2.4) (Storm with Python)
+- [pyelasticsearch](https://github.com/pyelasticsearch/pyelasticsearch) 1.3 (Elasticsearch with Python)
 - [storm-graphite](https://github.com/verisign/storm-graphite) 0.1.4
 - [statsd](https://github.com/etsy/statsd) 0.7.2
 - [kafka-statsd-metrics2](https://github.com/airbnb/kafka-statsd-metrics2) 0.4.0
+- [kafka-manager](https://github.com/yahoo/kafka-manager) 1.2.4
 
 ## Live Demo
 A [live demo](http://mydiemho.link) is currently (June 2015) running.
@@ -37,6 +39,8 @@ To simulate user request, I used businesses in San Francisco as check points.
 
 ## Pipeline Overview
 ![alt tag](images/pipeline.png)
+
+![alt tag](images/distributed_system.png)
 
 ## Realtime Processing
 ![alt tag](images/storm.png)
@@ -58,6 +62,7 @@ I used **Apache Storm** to provide real-time data processing.
 ## Install And Setup:
 
 Instructions are specific to Debian/Ubuntu.
+
 
 ### Elasticsearch
 
@@ -105,6 +110,33 @@ Ubunut instances have a default value of 1024, which is not enought for Elastics
 #### Now you can start your service
 	sudo /etc/init.d/elasticsearch start
 	
+### ZOOKEEPER
+Coming soon.
+
+### KAFKA
+Coming soon.
+
+### STORM
+Coming soon.
+
+#### Topologies logging
+The topologies send their logs to the **pyleus** directory in **/tmp** so please make sure it exists on all supervisor nodes.  You'll also need to do this in the nimbus node if you wish to run the topology locally.
+
+	cd /tmp
+	mkdir pyleus
+
+### Storm-Graphite
+Coming soon.
+
+### Graphite
+Coming soon.
+
+### Grafana
+Coming soon.
+
+### Statsd
+Coming soon.
+
 ### Configuration files
 Please see [configurations](notes/configurations) for the settings I use for my set up.
  
@@ -116,7 +148,7 @@ Please see [configurations](notes/configurations) for the settings I use for my 
  
 > It is critical that you run each of these daemons under supervision. Storm is a fail-fast system which means the processes will halt whenever an unexpected error is encountered. Storm is designed so that it can safely halt at any point and recover correctly when the process is restarted. This is why Storm keeps no state in-process – if Nimbus or the Supervisors restart, the running topologies are unaffected.
 > 
-> [Storm documentation](https://storm.apache.org/documentation/Setting-up-a-Storm-cluster.html)
+> -- [Storm documentation](https://storm.apache.org/documentation/Setting-up-a-Storm-cluster.html)
 
 ### Storm
 #### Master node: Nimbus and UI daemons
@@ -221,6 +253,39 @@ Make sure to give whatever user (if not root) you specified in the config file p
 
 	sudo chown ubuntu -R [$KAFKA_HOME/$ZOOKEEPER_HOME/$STORM_HOME]
 	
+## USAGE
+Assuming that you have a storm, kafka and zookeeper cluster up and running:
+
+1. Replace values in [config/config.json] with appropriate values: kafka_cluster, es_cluster, etc.
+2. Create the index in ElasticSearch.  I recommend running this on an Elastsearch node.
+
+		cd <PATH_TO_DIRECTORY>/elasticsearch/
+		./createIndex.sh
+	
+3. Submit topologies.  Run the following in your nimbus node.
+	
+		cd <PATH_TO_DIRECTORY>/storm
+		./build geo_update_topology.yaml
+		./build request_processing_topology.yaml
+		
+		./submit geo_update_topology.jar
+		./submit request_processing_topology.jar
+		
+4. To start simulations.  I recommend running this outside of your storm or Elasticsearch clusters.
+	
+		cd <PATH_TO_DIRECTORY>/simulations
+		./run.sh
+		
+		# to check that everything is running.  You should see 3 detached screens
+		screen -ls
+
+4. To stop simulation (on the same instance that you started the simulation).  **WARNING** this will kill all detached screens
+
+		cd <PATH_TO_DIRECTORY>/simulations
+		./stop.sh
+		
+		# to check that everything is stop. 
+		screen -ls
 
 ## Presentation Deck
 My presentation slides are available at [slideshare](http://www.slideshare.net/MsSophieHowl/my-ho-week5demo).
