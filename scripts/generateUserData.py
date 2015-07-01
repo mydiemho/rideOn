@@ -2,10 +2,6 @@
 import csv
 import sys
 
-# abboip, 37.75134, -122.39488
-import time
-
-
 def extract(input, outfile):
     locations = []
     with open(input, 'rb') as file:
